@@ -1,0 +1,21 @@
+name: contracts
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.7.1
+      - run: forge install --no-git --shallow OpenZeppelin/openzeppelin-contracts@v5.6.1 foundry-rs/forge-std@v1.16.2
+      - run: forge fmt --check
+      - run: forge build
+      - run: forge test -vvv
+      - run: forge lint
