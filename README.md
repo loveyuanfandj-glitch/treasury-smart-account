@@ -1,10 +1,43 @@
 # Treasury Smart Account
 
-An ERC-4337 treasury account with owner execution, constrained session keys, ERC-1271 signatures, guardian freeze, delayed recovery, and deterministic CREATE2 deployment.
+An ERC-4337 treasury account with owner execution, constrained session keys,
+ERC-1271 signatures, guardian freeze, delayed recovery, and deterministic
+CREATE2 deployment. The accompanying React control plane reads the verified
+Base Sepolia account and makes its authority boundaries visually inspectable.
 
 The project demonstrates how a bot or employee key can receive narrowly scoped authority without receiving unrestricted control over treasury funds.
 
 > Educational portfolio implementation. The contracts have not been independently audited and must not be used to secure production funds.
+
+![ERC-4337 treasury control plane with session policy and verified deployment state](docs/images/dashboard-overview.jpg)
+
+![The policy simulator rejecting a transfer that exceeds the session daily limit](docs/images/policy-simulator-blocked.jpg)
+
+## Interactive control plane
+
+The dashboard is a read-only control surface plus a local policy simulator. It
+does not request private keys or submit transactions. It shows:
+
+- live owner, guardian, pause state, session epoch, and block number when the
+  Base Sepolia RPC is available;
+- the exact-match verified contracts and transaction evidence documented in
+  [`deployments/base-sepolia.md`](deployments/base-sepolia.md);
+- session-key target, selector, validity, epoch, and daily-spend boundaries;
+- an interactive allow/deny simulator for target, selector, and spend changes;
+- the CREATE2 → session configuration → UserOperation → accounting lifecycle;
+  and
+- the guardian pause and delayed recovery path.
+
+Run it locally:
+
+```bash
+cd dashboard
+npm ci
+npm run dev
+```
+
+See [`docs/control-plane.md`](docs/control-plane.md) for the data model,
+security boundaries, and verification commands.
 
 ## Permission model
 
@@ -78,6 +111,16 @@ forge install --no-git --shallow \
 forge fmt --check
 forge test -vvv
 forge lint
+```
+
+Validate the control plane separately:
+
+```bash
+cd dashboard
+npm ci
+npm run check
+npm run test
+npm run build
 ```
 
 Pinned toolchain:
