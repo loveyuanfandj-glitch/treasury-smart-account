@@ -3,3 +3,6 @@ out/
 broadcast/
 lib/
 .env
+node_modules/
+dist/
+*.tsbuildinfo
